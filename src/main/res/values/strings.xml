@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AreYouOK</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="welcome_1">AreYouOK is a simple personal alarm system that checks if you are OK every so often throughout the day.\n\nIf you don\'t respond it alerts your chosen friends and family by text message so that they can call or check in to make sure all is well.\n\n</string>
+    <string name="welcome_2">(*Text messages charged at your standard rate, please check with your provider).</string>
+    
+    <string name="introAlarmOn">Alarm is set up, no problems to report.</string>
+    <string name="introAlarmOff">Alarm is NOT running, please click \'Make Changes\' to set it.</string>
+    <string name="change_alarm">Change Alarm</string>
+    <string name="set_alarm">Set Alarm</string>
+
+
+
+    <string name="help_message">I may be in need of help, please call or visit to check (sent by AreYouOK app)</string>
+    <string name="im_ok_message">I am OK, please ignore previous message (sent by AreYouOK app)</string>
+
+    <string name="wizard_complete" formatted="false">Great we\'re all set. The alarm will ring every %s hour(s) after %s until %s, but not at those times.\n\nRemember you can change these settings, or disable the alarm at any time by opening the AreYouOK app.</string>
+</resources>

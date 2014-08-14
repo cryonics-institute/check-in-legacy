@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="apptheme_color">#33b5e5</color>
+    <color name="text_color_enabled">#ff000000</color>
+    <color name="text_color_disabled">#ffcccccc</color>
+
+    <color name="button_text_color_enabled">#ffffffff</color>
+    <color name="button_text_color_pressed">#ffeeeeee</color>
+    <color name="button_text_color_disabled">#ffaaaaaa</color>
+</resources>

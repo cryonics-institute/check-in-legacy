@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center_vertical"
+>
+	<TextView
+		android:id="@+id/label"
+		android:layout_width="0px"
+		android:layout_weight="1"
+		android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+		android:gravity="left|center_vertical"
+        android:textSize="@dimen/text_body"
+	/>    
+	
+	<ImageButton 
+		android:id="@+id/deleteButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:minWidth="50dp"
+		android:maxHeight="50dp"
+		android:src="@drawable/delete"
+        android:background="@android:color/transparent"
+	/>
+</LinearLayout>
+<!-- From: file:/Users/richardleggett/Projects/areyouok/src/main/res/layout/contact_list_row.xml -->

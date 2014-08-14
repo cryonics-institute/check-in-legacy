@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient 
+        android:startColor="#367cac" 
+        android:centerColor="#66a7d5"
+        android:endColor="#66a7d5"
+        android:angle="270"
+     />
+    <corners android:radius="0dp" />
+</shape><!-- From: file:/Users/richardleggett/Projects/areyouok/src/main/res/drawable/bg.xml -->

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_padding"
+    android:gravity="center_horizontal"
+    >
+	
+	<TextView  
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content" 
+		android:text="What time are you asleep? You don't need to be exact, it just tells the alarm not to go off during these hours."
+		android:layout_marginBottom="16dip"
+        android:textSize="@dimen/text_body"
+    />
+    
+    <Spinner 
+		android:id="@+id/fromSpinner"
+		android:layout_width="200dip" 
+		android:layout_height="wrap_content"
+    />
+    
+    <TextView  
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:text="to"
+        android:textSize="@dimen/text_body"
+        android:padding="16dp"
+    />
+
+    <Spinner 
+		android:id="@+id/toSpinner"
+		android:layout_width="200dip" 
+		android:layout_height="wrap_content"
+        style="@style/SpinnerAppTheme"
+    />
+    
+    <View 
+    	android:layout_width="match_parent"
+    	android:layout_height="0px"
+    	android:layout_weight="1"
+    />
+    
+	<Button 
+		android:id="@+id/nextButton" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:text="Continue" 
+	>
+	</Button>
+</LinearLayout>
+<!-- From: file:/Users/richardleggett/Projects/areyouok/src/main/res/layout/alarm_settings_activity_sleep.xml -->

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/activity_padding"
+    >
+	
+	<TextView  
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content" 
+		android:text="Are you OK? Just checking."
+        android:textSize="@dimen/text_body"
+		android:layout_marginBottom="16dp"
+   	/>
+
+    <Button
+        android:id="@+id/yesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="160dp"
+        android:maxWidth="400dp"
+        android:text="Yes I'm OK"
+        android:textSize="30sp"
+        android:textColor="@color/button_text_color"
+        android:shadowColor="#cc000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_green"
+        android:drawableLeft="@drawable/thumbs_up_white"
+        />
+    <Button
+        android:id="@+id/noButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="160dp"
+        android:maxWidth="400dp"
+        android:text="No, I need help!"
+        android:textSize="30sp"
+        android:textColor="@color/button_text_color"
+        android:shadowColor="#cc000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:background="@drawable/button_red"
+        android:drawableLeft="@drawable/thumbs_down_white"
+        />
+</LinearLayout>

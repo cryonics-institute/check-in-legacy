@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="0dip"
+	android:fillViewport="true"
+	>
+		
+	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:padding="@dimen/activity_padding"
+	    android:gravity="center_horizontal"
+	    >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:layout_marginBottom="16dip"
+            android:background="@drawable/status_border"
+            android:padding="16dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/statusIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/thumbs_up"/>
+            <TextView
+                android:id="@+id/introTextView"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:text="@string/introAlarmOff"
+                android:textSize="18sp"
+                />
+        </LinearLayout>
+
+
+		<Button 
+			android:id="@+id/call_for_help_button" 
+			android:text="Send message for help!" 
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+			android:maxWidth="300dip" 
+			android:layout_marginBottom="8dip"
+		/>
+		<Button 
+			android:id="@+id/tell_friends_ok_button" 
+			android:text="Tell people I'm OK" 
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+			android:maxWidth="300dip"
+			android:layout_marginBottom="8dip"
+		/>
+		<Button 
+			android:id="@+id/settings_button" 
+			android:text="Make Changes" 
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+			android:maxWidth="300dip"
+			android:layout_marginBottom="8dip"
+		/>
+		
+		<View android:layout_width="match_parent" 
+		android:layout_height="0px" 
+		android:layout_weight="1" />
+		
+		<Button 
+			android:id="@+id/exit_button" 
+			android:text="Back to phone screen" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:layout_gravity="left"
+            android:drawableLeft="@drawable/exit_icon"
+            android:drawablePadding="8dp"
+		/>
+	</LinearLayout>
+</ScrollView><!-- From: file:/Users/richardleggett/Projects/areyouok/src/main/res/layout/menu_activity.xml -->
