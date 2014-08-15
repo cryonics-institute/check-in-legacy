@@ -29,6 +29,7 @@ public class Prefs {
 	private static final String ALARM_OFF_AT = "ALARM_OFF_AT";
 	private static final String ALARM_ON_AT = "ALARM_ON_AT";
 	private static final String ALARM_FREQUENCY = "ALARM_FREQUENCY";
+    private static final String NEXT_ALARM_TIME = "NEXT_ALARM_TIME";
 	private static final String SENT_SMS_COUNT = "SENT_SMS_COUNT";
 	private static final String RESPOND_TIME = "RESPOND_TIME";
 	private static final String CONTACTS = "CONTACTS";
@@ -85,7 +86,19 @@ public class Prefs {
 		mEditor.putInt(ALARM_ON_AT, hour);
 		mEditor.commit();
 	}
-	
+
+    /**
+     * Next scheduled alarm time
+     * @return -1 if not set else Date as milliseconds value (Date.getTime())
+     */
+    public static long getNextAlarmTime() {
+        return mPrefs.getLong(NEXT_ALARM_TIME, -1);
+    }
+    public static void setNextAlarmTime(long time) {
+        mEditor.putLong(NEXT_ALARM_TIME, time);
+        mEditor.commit();
+    }
+
 	public static int getAlarmFrequencyHours() {
 		return mPrefs.getInt(ALARM_FREQUENCY, 4); // hrs
 	}
@@ -102,6 +115,9 @@ public class Prefs {
 		mEditor.commit();
 	}
 
+    /**
+     * Time user has to respond to alert before sending SMS
+     */
 	public static int getRespondTime() {
 		return mPrefs.getInt(RESPOND_TIME, 1000*60*20); // mins
 //		return mPrefs.getInt(RESPOND_TIME, 1000*60*1); // 1 mins

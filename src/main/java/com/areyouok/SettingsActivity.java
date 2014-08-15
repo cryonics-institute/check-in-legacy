@@ -15,6 +15,10 @@ import android.widget.Toast;
 import com.areyouok.prefs.Prefs;
 
 public class SettingsActivity extends ActionBarActivity {
+
+    private static final int REQUEST_SET_ALARM = 0;
+    private static final int REQUEST_CANCEL_ALARM = 1;
+
 	Button mChangeAlarmButton;
 	Button mCancelAlarmButton;
 	
@@ -28,7 +32,7 @@ public class SettingsActivity extends ActionBarActivity {
 		mChangeAlarmButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(SettingsActivity.this, AlarmSettingsActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, REQUEST_SET_ALARM);
 			}
 		});
 		
@@ -55,6 +59,7 @@ public class SettingsActivity extends ActionBarActivity {
 			        	Toast.makeText(SettingsActivity.this, "Alarm cancelled", Toast.LENGTH_LONG).show();
 			        	dialog.dismiss();
 			        	updateButtons();
+                        finish();
 			        }
 			    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
 			        public void onClick(DialogInterface dialog, int whichButton) {
@@ -90,8 +95,17 @@ public class SettingsActivity extends ActionBarActivity {
 		
 		updateButtons();
 	}
-	
-	private void updateButtons() {
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_SET_ALARM) {
+            // back out to main menu after setting alarm
+            finish();
+        }
+    }
+
+    private void updateButtons() {
 		boolean isAlarmOn = Prefs.getAlarmEnabled();
 		
 		mChangeAlarmButton.setText(isAlarmOn ? R.string.change_alarm : R.string.set_alarm);

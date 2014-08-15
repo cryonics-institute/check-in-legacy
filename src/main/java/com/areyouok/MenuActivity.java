@@ -25,6 +25,10 @@ import com.areyouok.data.Contact;
 import com.areyouok.data.Extras;
 import com.areyouok.prefs.Prefs;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * Main menu
  */
@@ -145,8 +149,18 @@ public class MenuActivity extends ActionBarActivity {
 		boolean isAlarmOn = Prefs.getAlarmEnabled();
 		TextView introText = (TextView)findViewById(R.id.introTextView);
 
+        Prefs.getAlarmOnAt();
+
 		if(isAlarmOn) {
-			introText.setText(R.string.introAlarmOn);
+            String nextAlarmTimeStr = "Unknown time";
+            long nextAlarmTime = Prefs.getNextAlarmTime();
+            if(nextAlarmTime!=-1) {
+                DateTime date = new DateTime(nextAlarmTime);
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("ha");
+                nextAlarmTimeStr = date.toString(fmt);
+            }
+
+			introText.setText(getString(R.string.introAlarmOn, nextAlarmTimeStr));
 			introText.setTextColor(0xff000000);
 		} else {
 			introText.setText(R.string.introAlarmOff);

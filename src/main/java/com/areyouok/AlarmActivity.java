@@ -116,7 +116,7 @@ public class AlarmActivity extends Activity {
 	}
 	
 	private void playAlertSound() {
-		AlarmSounds.play(R.raw.alarm, 10);
+		AlarmSounds.play(R.raw.alarm, 30);
 	}
 	
 	private void stopAlertSound() {
@@ -217,9 +217,11 @@ public class AlarmActivity extends Activity {
         if(nextAlarm != null) {
         	Log.i("AYO", "Date time " + nextAlarm.getMillis());
         	Log.i("AYO", "Next Alarm " + nextAlarm.toString());
-//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*180, pendingIntent);
-        	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
+// this next line can be used to test the alarm more frequently for dev purposes (1min)
+am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*60, pendingIntent);
+//        	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
         	Prefs.setAlarmEnabled(true);
+            Prefs.setNextAlarmTime(nextAlarm.getMillis());
         } else {
         	Toast.makeText(app, "Unable to set alarm, unknown problem occurred", Toast.LENGTH_LONG);
         	Log.e("AYO", "Couldn't find nextAlarm time");

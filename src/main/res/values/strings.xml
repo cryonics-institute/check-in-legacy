@@ -8,8 +8,8 @@
     <string name="welcome_1">AreYouOK is a simple personal alarm system that checks if you are OK every so often throughout the day.\n\nIf you don\'t respond it alerts your chosen friends and family by text message so that they can call or check in to make sure all is well.\n\n</string>
     <string name="welcome_2">(*Text messages charged at your standard rate, please check with your provider).</string>
     
-    <string name="introAlarmOn">Alarm is set up, no problems to report.</string>
-    <string name="introAlarmOff">Alarm is NOT running, please click \'Make Changes\' to set it.</string>
+    <string name="introAlarmOn">Alarm is set up, next check-in at %1$s.</string>
+    <string name="introAlarmOff">Check-in alarm is NOT set, please click \'Make Changes\' to set it.</string>
     <string name="change_alarm">Change Alarm</string>
     <string name="set_alarm">Set Alarm</string>
 
