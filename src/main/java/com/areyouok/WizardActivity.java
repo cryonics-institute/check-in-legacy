@@ -95,16 +95,18 @@ public class WizardActivity extends ActionBarActivity {
 				offTime = offTime - 12;
 				offAMPM = " pm";
 			}
-	    	
+
+            int alarmFreqHours = Prefs.getAlarmFrequencyHours();
 	    	TextView textView = (TextView)findViewById(R.id.textView);
 	    	textView.setText(String.format(textView.getText().toString(), 
-	    						String.valueOf(Prefs.getAlarmFrequencyHours()), 
+	    						String.valueOf(alarmFreqHours),
+                                alarmFreqHours==1 ? getString(R.string.hour) : getString(R.string.hours),
 	    						String.valueOf(onTime) + onAMPM, 
 	    						String.valueOf(offTime) + offAMPM
 	    						)
 	    					);
 	    	
-	    	((Button)findViewById(R.id.continueButton)).setOnClickListener(new OnClickListener() {
+	    	findViewById(R.id.continueButton).setOnClickListener(new OnClickListener() {
 	    		public void onClick(View v) {
                     Intent intent = new Intent(WizardActivity.this, MenuActivity.class);
                     startActivity(intent);
