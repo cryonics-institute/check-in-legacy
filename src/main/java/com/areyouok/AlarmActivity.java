@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,8 +25,12 @@ import android.widget.Toast;
 import com.areyouok.prefs.Prefs;
 
 public class AlarmActivity extends Activity {
-	
-	private Vibrator mVibrator;
+    private Vibrator mVibrator;
+    private Handler mHandler = new Handler();
+
+    private static final int ALARM_SOUND_REPEAT_COUNT = 20;
+    private int mAlarmSoundRepeatCount = 0;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +82,26 @@ public class AlarmActivity extends Activity {
 		
 		mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 		startVibrator();
-		
-		playAlertSound();
-		
+
+        mAlarmSoundRepeatCount = 0;
+        mHandler.post(mPlayAlarmSoundRunnable);
+
 		// give user a countdown before sending out messages to friends
 		AreYouOKApp.startCountdownTimer();
-		
+
+        // Setup the next alarm
 		new SetAlarmTask().execute();
 	}
+
+    private Runnable mPlayAlarmSoundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            playAlertSound();
+            if(mAlarmSoundRepeatCount++ < ALARM_SOUND_REPEAT_COUNT) {
+                mHandler.postDelayed(mPlayAlarmSoundRunnable, 5000);
+            }
+        }
+    };
 	
 	private class SetAlarmTask extends AsyncTask<Void, Void, Void> {
 		@Override
@@ -116,16 +133,18 @@ public class AlarmActivity extends Activity {
 	}
 	
 	private void playAlertSound() {
-		AlarmSounds.play(R.raw.alarm, 30);
+		AlarmSounds.play(R.raw.alarm);
 	}
 	
 	private void stopAlertSound() {
+        mAlarmSoundRepeatCount = 0;
+        mHandler.removeCallbacks(mPlayAlarmSoundRunnable);
 		AlarmSounds.stop();
 	}
 	
 	private void startVibrator() {
 		try {
-			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l}, -1);
+			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l}, 3);
 		} catch (Exception e) {
 			Log.w("AYO", "Vibrator failed.");
 		}
@@ -217,9 +236,9 @@ public class AlarmActivity extends Activity {
         if(nextAlarm != null) {
         	Log.i("AYO", "Date time " + nextAlarm.getMillis());
         	Log.i("AYO", "Next Alarm " + nextAlarm.toString());
-// this next line can be used to test the alarm more frequently for dev purposes (1min)
-am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*60, pendingIntent);
-//        	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
+//this next line can be used to test the alarm more frequently for dev purposes (1min)
+//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*60, pendingIntent);
+        	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
         	Prefs.setAlarmEnabled(true);
             Prefs.setNextAlarmTime(nextAlarm.getMillis());
         } else {

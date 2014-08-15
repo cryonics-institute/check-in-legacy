@@ -28,15 +28,10 @@ public class AlarmSounds {
 	
 	/**
 	 * Plays a sound once at ringer volume
+     * NOTE: looping is broken for SoundPool on 4.3+ so we have to manually call this on repeat
 	 * @param id R.raw.soundID
 	 */
 	public static void play(int id) {
-		play(id, 0);
-	}
-	
-	public static void play(int id, int loop) {
-//		if(Prefs.getSoundEffectsOn() == false) return;
-		
 		final int resID = id;
 		
 		if(!mSoundPoolMap.containsKey(id)) {
@@ -51,7 +46,7 @@ public class AlarmSounds {
 		int result = 0;
 		int abortCount = 200;	
 		do {
-			result = mSoundPool.play(mSoundPoolMap.get(resID), streamVolume, streamVolume, 1, loop, 1f);
+			result = mSoundPool.play(mSoundPoolMap.get(resID), streamVolume, streamVolume, 1, 0, 1f);
 			if(result == 0) {
 				try {
 					Thread.sleep(2);
