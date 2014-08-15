@@ -39,7 +39,7 @@ public class AlarmActivity extends Activity {
 		
 		setContentView(R.layout.alarm_activity);
 		
-		((Button)findViewById(R.id.yesButton)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AreYouOKApp.cancelCountdownTimer();
 				Prefs.setSentSMSCount(0);
@@ -49,7 +49,7 @@ public class AlarmActivity extends Activity {
 			}
 		});
 
-		((Button)findViewById(R.id.noButton)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AreYouOKApp.cancelCountdownTimer();
 				
@@ -67,6 +67,7 @@ public class AlarmActivity extends Activity {
 					}
 				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+                        Prefs.setSentSMSCount(0);
 						dialog.dismiss();
 						finish();
 					}
