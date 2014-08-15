@@ -73,9 +73,9 @@ public class ChooseContactsActivity extends ActionBarActivity {
 		mDoneButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(mContacts.size()>0) {
-					setResult(1);
+					setResult(RESULT_OK);
 				} else {
-					setResult(0);
+					setResult(RESULT_CANCELED);
 				}
 				finish();
 			}

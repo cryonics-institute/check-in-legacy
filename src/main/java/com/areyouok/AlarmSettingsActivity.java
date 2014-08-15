@@ -122,11 +122,11 @@ public class AlarmSettingsActivity extends ActionBarActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			setResult(1);
+			setResult(RESULT_OK);
 			mProgressDialog.dismiss();
-			Toast t = Toast.makeText(AlarmSettingsActivity.this, "Alarm Set", Toast.LENGTH_LONG);
-            t.setGravity(CENTER, 0, 0);
-            t.show();
+//			Toast t = Toast.makeText(AlarmSettingsActivity.this, "Alarm Set", Toast.LENGTH_LONG);
+//            t.setGravity(CENTER, 0, 0);
+//            t.show();
 			finish();
 		}
 	}

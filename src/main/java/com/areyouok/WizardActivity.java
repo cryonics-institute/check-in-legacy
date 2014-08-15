@@ -119,13 +119,13 @@ public class WizardActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if(requestCode == CHOOSE_CONTACTS_REQUEST) {
     		// back from picking friends and family
-    		if(resultCode == 1) {
-    			state = SET_ALARM_STATE;
+    		if(resultCode == RESULT_OK) {
+                state = SET_ALARM_STATE;
     			populateUI();
     		}
     	} else if(requestCode == SET_ALARM_REQUEST) {
     		// back from setting up alarm
-    		if(resultCode == 1) {
+    		if(resultCode == RESULT_OK) {
     			state = WIZARD_DONE_STATE;
     			populateUI();
     		}
