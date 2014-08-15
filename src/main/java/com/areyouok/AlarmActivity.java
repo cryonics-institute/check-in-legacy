@@ -19,7 +19,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.areyouok.prefs.Prefs;
@@ -28,8 +27,8 @@ public class AlarmActivity extends Activity {
     private Vibrator mVibrator;
     private Handler mHandler = new Handler();
 
-    private static final int ALARM_SOUND_REPEAT_COUNT = 20;
-    private int mAlarmSoundRepeatCount = 0;
+    private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_COUNT = 20;
+    private int mAlarmSoundAndVibrateRepeatCount = 0;
 
 	
 	@Override
@@ -83,8 +82,8 @@ public class AlarmActivity extends Activity {
 		mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 		startVibrator();
 
-        mAlarmSoundRepeatCount = 0;
-        mHandler.post(mPlayAlarmSoundRunnable);
+        mAlarmSoundAndVibrateRepeatCount = 0;
+        mHandler.post(mAlarmSoundAndVibrateRunnable);
 
 		// give user a countdown before sending out messages to friends
 		AreYouOKApp.startCountdownTimer();
@@ -93,12 +92,13 @@ public class AlarmActivity extends Activity {
 		new SetAlarmTask().execute();
 	}
 
-    private Runnable mPlayAlarmSoundRunnable = new Runnable() {
+    private Runnable mAlarmSoundAndVibrateRunnable = new Runnable() {
         @Override
         public void run() {
             playAlertSound();
-            if(mAlarmSoundRepeatCount++ < ALARM_SOUND_REPEAT_COUNT) {
-                mHandler.postDelayed(mPlayAlarmSoundRunnable, 5000);
+            startVibrator();
+            if(mAlarmSoundAndVibrateRepeatCount++ < ALARM_SOUND_AND_VIBRATE_REPEAT_COUNT) {
+                mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 5000);
             }
         }
     };
@@ -137,14 +137,15 @@ public class AlarmActivity extends Activity {
 	}
 	
 	private void stopAlertSound() {
-        mAlarmSoundRepeatCount = 0;
-        mHandler.removeCallbacks(mPlayAlarmSoundRunnable);
+        mAlarmSoundAndVibrateRepeatCount = 0;
+        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
 		AlarmSounds.stop();
+        stopVibrator();
 	}
 	
 	private void startVibrator() {
 		try {
-			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l,250l,1000l}, 3);
+			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l}, -1);
 		} catch (Exception e) {
 			Log.w("AYO", "Vibrator failed.");
 		}
@@ -176,10 +177,10 @@ public class AlarmActivity extends Activity {
         am.cancel(pendingIntent);
         
         // check alarm is on
-//        if(Prefs.getAlarmEnabled() == false) {
-//        	Log.i("AYO", "Alarm disabled");
-//        	return;
-//        }
+        if(Prefs.getAlarmEnabled() == false) {
+        	Log.i("AYO", "Alarm disabled");
+        	return;
+        }
         
         Log.i("AYO", "Scheduling alarm...");
 		Log.i("AYO", "On at " + Prefs.getAlarmOnAt());

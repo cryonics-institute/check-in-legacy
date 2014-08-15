@@ -115,6 +115,7 @@ public class AlarmSettingsActivity extends ActionBarActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			// set/schedule next alarm
+            Prefs.setAlarmEnabled(true);
 			AlarmActivity.setAlarm(AlarmSettingsActivity.this);
 			return null;
 		}
