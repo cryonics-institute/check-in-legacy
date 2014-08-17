@@ -117,10 +117,11 @@ public class Prefs {
 
     /**
      * Time user has to respond to alert before sending SMS
+     * (default is 20 mins)
      */
 	public static int getRespondTime() {
-		return mPrefs.getInt(RESPOND_TIME, 1000*60*20); // mins
-//		return mPrefs.getInt(RESPOND_TIME, 1000*60*1); // 1 mins
+		return mPrefs.getInt(RESPOND_TIME, 1000*60*20); // 20 mins
+//		return mPrefs.getInt(RESPOND_TIME, 1000*60*1); // 1 min
 	}
 	public static void setRespondTime(int msecs) {
 		mEditor.putInt(RESPOND_TIME, msecs);

@@ -49,6 +49,7 @@ public class AlarmActivity extends Activity {
 				Prefs.setSentSMSCount(0);
 				stopAlertSound();
 				stopVibrator();
+                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
 				finish();
 			}
 		});
@@ -59,6 +60,7 @@ public class AlarmActivity extends Activity {
 				
 				stopAlertSound();
 				stopVibrator();
+                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
 				
 				new AlertDialog.Builder(AlarmActivity.this)
 				.setMessage("Do you need help?")
@@ -92,6 +94,17 @@ public class AlarmActivity extends Activity {
 		new SetAlarmTask().execute();
 	}
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAlertSound();
+        stopVibrator();
+        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+    }
+
+    /**
+     * Runs every X seconds to resound the alarm and vibrate the phone
+     */
     private Runnable mAlarmSoundAndVibrateRunnable = new Runnable() {
         @Override
         public void run() {
@@ -137,8 +150,8 @@ public class AlarmActivity extends Activity {
 	}
 	
 	private void stopAlertSound() {
-        mAlarmSoundAndVibrateRepeatCount = 0;
         mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+        mAlarmSoundAndVibrateRepeatCount = 0;
 		AlarmSounds.stop();
         stopVibrator();
 	}
@@ -167,7 +180,7 @@ public class AlarmActivity extends Activity {
 	 */
 	public static void setAlarm(Context context) {
 		Context app = context.getApplicationContext();
-		
+
 		AlarmManager am = (AlarmManager)app.getSystemService(ALARM_SERVICE);
 
 		final Intent alarmIntent = new Intent(app, AlarmReceiver.class);
