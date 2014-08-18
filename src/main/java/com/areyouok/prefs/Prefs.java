@@ -56,7 +56,7 @@ public class Prefs {
 	}
 	
 	public static boolean getAlarmEnabled() {
-		return mPrefs.getBoolean(ALARM_ENABLED, true);
+		return mPrefs.getBoolean(ALARM_ENABLED, false);
 	}
 	public static void setAlarmEnabled(boolean flag) {
 		mEditor.putBoolean(ALARM_ENABLED, flag);
