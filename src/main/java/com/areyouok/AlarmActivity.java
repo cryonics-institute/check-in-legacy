@@ -67,6 +67,7 @@ public class AlarmActivity extends Activity {
 				.setMessage("Do you need help?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+                        AreYouOKApp.cancelCountdownTimer();
 						sendSMS();
 						Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG).show();
 						dialog.dismiss();
@@ -74,6 +75,7 @@ public class AlarmActivity extends Activity {
 					}
 				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+                        AreYouOKApp.cancelCountdownTimer();
                         Prefs.setSentSMSCount(0);
 						dialog.dismiss();
 						finish();
@@ -140,7 +142,7 @@ public class AlarmActivity extends Activity {
 	protected void onUserLeaveHint() {
 		Log.i(TAG, "User left"); // user hit Home, same as OK
 		super.onUserLeaveHint();
-		finish(); // TODO: Appears to also fire if they reject an incoming call during the dialog 
+		finish();
 	}
 	
 	private void sendSMS() {
