@@ -24,10 +24,12 @@ import android.widget.Toast;
 import com.areyouok.prefs.Prefs;
 
 public class AlarmActivity extends Activity {
+    private static final String TAG = "AlarmActivity";
+
     private Vibrator mVibrator;
     private Handler mHandler = new Handler();
 
-    private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_COUNT = 20;
+    private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT = 20;
     private int mAlarmSoundAndVibrateRepeatCount = 0;
 
 	
@@ -57,7 +59,6 @@ public class AlarmActivity extends Activity {
 		findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AreYouOKApp.cancelCountdownTimer();
-				
 				stopAlertSound();
 				stopVibrator();
                 mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
@@ -85,6 +86,7 @@ public class AlarmActivity extends Activity {
 		startVibrator();
 
         mAlarmSoundAndVibrateRepeatCount = 0;
+        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
         mHandler.post(mAlarmSoundAndVibrateRunnable);
 
 		// give user a countdown before sending out messages to friends
@@ -110,7 +112,7 @@ public class AlarmActivity extends Activity {
         public void run() {
             playAlertSound();
             startVibrator();
-            if(mAlarmSoundAndVibrateRepeatCount++ < ALARM_SOUND_AND_VIBRATE_REPEAT_COUNT) {
+            if(mAlarmSoundAndVibrateRepeatCount++ < ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT) {
                 mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 5000);
             }
         }
@@ -128,7 +130,7 @@ public class AlarmActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode == KeyEvent.KEYCODE_BACK) {
-			Log.i("AYO", "Back pressed"); // doesn't fire due to not being a Launcher replacement
+			Log.i(TAG, "Back pressed"); // doesn't fire due to not being a Launcher replacement
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -136,7 +138,7 @@ public class AlarmActivity extends Activity {
 	
 	@Override
 	protected void onUserLeaveHint() {
-		Log.i("AYO", "User left"); // user hit Home, same as OK
+		Log.i(TAG, "User left"); // user hit Home, same as OK
 		super.onUserLeaveHint();
 		finish(); // TODO: Appears to also fire if they reject an incoming call during the dialog 
 	}
@@ -160,7 +162,7 @@ public class AlarmActivity extends Activity {
 		try {
 			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l}, -1);
 		} catch (Exception e) {
-			Log.w("AYO", "Vibrator failed.");
+			Log.w(TAG, "Vibrator failed.");
 		}
 		
 	}
@@ -169,7 +171,7 @@ public class AlarmActivity extends Activity {
 		try {
 			mVibrator.cancel();
 		} catch (Exception e) {
-			Log.w("AYO", "Vibrator failed (stopping).");
+			Log.w(TAG, "Vibrator failed (stopping).");
 		}
 	}
 	
@@ -179,10 +181,8 @@ public class AlarmActivity extends Activity {
 	 * @param context
 	 */
 	public static void setAlarm(Context context) {
-		Context app = context.getApplicationContext();
-
-		AlarmManager am = (AlarmManager)app.getSystemService(ALARM_SERVICE);
-
+		final Context app = context.getApplicationContext();
+		final AlarmManager am = (AlarmManager)app.getSystemService(ALARM_SERVICE);
 		final Intent alarmIntent = new Intent(app, AlarmReceiver.class);
 		final PendingIntent pendingIntent = PendingIntent.getBroadcast(app, 0, alarmIntent, 0);
 		
@@ -191,17 +191,17 @@ public class AlarmActivity extends Activity {
         
         // check alarm is on
         if(Prefs.getAlarmEnabled() == false) {
-        	Log.i("AYO", "Alarm disabled");
+        	Log.i(TAG, "Alarm disabled");
         	return;
         }
         
-        Log.i("AYO", "Scheduling alarm...");
-		Log.i("AYO", "On at " + Prefs.getAlarmOnAt());
-		Log.i("AYO", "Off at " + Prefs.getAlarmOffAt());
+        Log.i(TAG, "Scheduling alarm...");
+		Log.i(TAG, "On at " + Prefs.getAlarmOnAt());
+		Log.i(TAG, "Off at " + Prefs.getAlarmOffAt());
         
-        // Joda Time takes into account DST changes when adding time
-        DateTime now = DateTime.now();
-        Log.i("AYO", "Now " + now.toString());
+        // Note: Joda DateTime takes into account DST changes when adding time
+        final DateTime now = DateTime.now();
+        Log.i(TAG, "Now " + now.toString());
         
         final int alarmFrequencyHours = Prefs.getAlarmFrequencyHours();
 
@@ -248,8 +248,7 @@ public class AlarmActivity extends Activity {
         } 
         
         if(nextAlarm != null) {
-        	Log.i("AYO", "Date time " + nextAlarm.getMillis());
-        	Log.i("AYO", "Next Alarm " + nextAlarm.toString());
+        	Log.i(TAG, "Next Alarm " + nextAlarm.toString());
 //this next line can be used to test the alarm more frequently for dev purposes (1min)
 //am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*60, pendingIntent);
         	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
@@ -257,7 +256,7 @@ public class AlarmActivity extends Activity {
             Prefs.setNextAlarmTime(nextAlarm.getMillis());
         } else {
         	Toast.makeText(app, "Unable to set alarm, unknown problem occurred", Toast.LENGTH_LONG);
-        	Log.e("AYO", "Couldn't find nextAlarm time");
+        	Log.e(TAG, "Couldn't find nextAlarm time");
         }
 	}
 	

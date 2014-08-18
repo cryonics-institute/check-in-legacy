@@ -7,13 +7,13 @@ import android.util.Log;
 
 public class OnBootReceiver extends BroadcastReceiver {
 
-	@Override
+    private static final String TAG = "OnBootReceiver";
+
+    @Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i("AYO", "OnBootReceiver");
+		Log.i(TAG, "OnBootReceiver");
 		
 		// set up alarm if it isn't already running
 		AlarmActivity.setAlarm(context);
-
 	}
-
 }
