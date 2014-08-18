@@ -234,6 +234,7 @@ public class MenuActivity extends ActionBarActivity {
 		    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int whichButton) {
 		        	dialog.dismiss();
+                    AreYouOKApp.cancelCountdownTimer();
                     mProgressDialog = ProgressDialog.show(MenuActivity.this, null, "Sending...", true);
                     registerSMSSentReceiver();
 		        	SMSSender.sendImOKSMS(MenuActivity.this);

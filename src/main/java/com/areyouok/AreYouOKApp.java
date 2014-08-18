@@ -21,6 +21,7 @@ public class AreYouOKApp extends Application {
 	
 	final private static Runnable mCountDownRunnable = new Runnable() {
 		public void run() {
+            // limit help messages to 5 total
 			if(Prefs.getSentSMSCount()<5) {
 				SMSSender.sendEmergencySMS(app);
 				cancelCountdownTimer();
