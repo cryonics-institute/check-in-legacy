@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Handler;
 
 import com.areyouok.prefs.Prefs;
+import com.crashlytics.android.Crashlytics;
 
 public class AreYouOKApp extends Application {
 	public static AreYouOKApp app;
@@ -19,6 +20,7 @@ public class AreYouOKApp extends Application {
 		app = this;
 		Prefs.init(this);
 		AlarmSounds.init(this);
+        Crashlytics.start(this);
 
         // set up alarm if it isn't already running
         AlarmActivity.setNextAlarm(this);
