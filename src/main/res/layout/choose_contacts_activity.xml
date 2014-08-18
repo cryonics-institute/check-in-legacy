@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chosen numbers, please add at least 1 to continue..."
+            android:text="Please add at least 1 number to continue&#8230;"
             android:layout_marginBottom="16dip"
             android:textSize="@dimen/text_body"
             />
