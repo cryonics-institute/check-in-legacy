@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,11 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.areyouok.prefs.Prefs;
-
-import static android.view.Gravity.CENTER;
 
 public class AlarmSettingsActivity extends ActionBarActivity {
 	
@@ -116,7 +112,7 @@ public class AlarmSettingsActivity extends ActionBarActivity {
 		protected Void doInBackground(Void... params) {
 			// set/schedule next alarm
             Prefs.setAlarmEnabled(true);
-			AlarmActivity.setAlarm(AlarmSettingsActivity.this);
+			AlarmActivity.setNextAlarm(AlarmSettingsActivity.this);
 			return null;
 		}
 		

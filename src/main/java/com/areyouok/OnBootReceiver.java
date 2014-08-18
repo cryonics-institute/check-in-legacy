@@ -14,6 +14,6 @@ public class OnBootReceiver extends BroadcastReceiver {
 		Log.i(TAG, "OnBootReceiver");
 		
 		// set up alarm if it isn't already running
-		AlarmActivity.setAlarm(context);
+		AlarmActivity.setNextAlarm(context);
 	}
 }

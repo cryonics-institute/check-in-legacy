@@ -106,7 +106,12 @@ public class Prefs {
 		mEditor.putInt(ALARM_FREQUENCY, freq);
 		mEditor.commit();
 	}
-	
+
+    /**
+     * Number of emergency SMS sent to contacts per "event" (an event being the user not able to
+     * reach phone within X mins). Reset to 0 when max number is sent or alert is dismissed with OK.
+     * @return
+     */
 	public static int getSentSMSCount() {
 		return mPrefs.getInt(SENT_SMS_COUNT, 0);
 	}

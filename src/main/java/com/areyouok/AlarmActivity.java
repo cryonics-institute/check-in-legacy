@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,9 +26,10 @@ import com.areyouok.prefs.Prefs;
 
 public class AlarmActivity extends Activity {
     private static final String TAG = "AlarmActivity";
+    private static final String CANCEL_ALERT_EXTRA = "cancelAlert";
 
     private Vibrator mVibrator;
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
 
     private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT = 20;
     private int mAlarmSoundAndVibrateRepeatCount = 0;
@@ -36,6 +38,13 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        // check for cancellation (see AreYouOKApp.java)
+        final Intent intent = getIntent();
+        if(intent.hasExtra(CANCEL_ALERT_EXTRA)) {
+            finish();
+            return;
+        }
 		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
 	            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
@@ -48,10 +57,7 @@ public class AlarmActivity extends Activity {
 		findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AreYouOKApp.cancelCountdownTimer();
-				Prefs.setSentSMSCount(0);
-				stopAlertSound();
-				stopVibrator();
-                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+                stopAlertSoundAndVibration();
 				finish();
 			}
 		});
@@ -59,39 +65,51 @@ public class AlarmActivity extends Activity {
 		findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AreYouOKApp.cancelCountdownTimer();
-				stopAlertSound();
-				stopVibrator();
-                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
-				
+                stopAlertSoundAndVibration();
+
 				new AlertDialog.Builder(AlarmActivity.this)
 				.setMessage("Do you need help?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
                         AreYouOKApp.cancelCountdownTimer();
-						sendSMS();
-						Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG).show();
+						sendEmergencySMS();
+
+						final Toast toast = Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER,0,0);
+                        toast.show();
+
 						dialog.dismiss();
 						finish();
 					}
 				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
                         AreYouOKApp.cancelCountdownTimer();
-                        Prefs.setSentSMSCount(0);
 						dialog.dismiss();
 						finish();
 					}
 				}).show();
 			}
 		});
-		
-		mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-		startVibrator();
+
+        mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         mAlarmSoundAndVibrateRepeatCount = 0;
-        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
-        mHandler.post(mAlarmSoundAndVibrateRunnable);
+
+        // post the command to start the alert sound, as onPause() is called on 2nd run which
+        // cancels the mAlarmSoundAndVibrateRunnable - this circumvents that
+        mHandler = new Handler();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+                mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 1000);
+            }
+        });
+
 
 		// give user a countdown before sending out messages to friends
+        // i.e. wait 20 mins for user to reach phone
+        AreYouOKApp.cancelCountdownTimer();
 		AreYouOKApp.startCountdownTimer();
 
         // Setup the next alarm
@@ -99,11 +117,17 @@ public class AlarmActivity extends Activity {
 	}
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.hasExtra(CANCEL_ALERT_EXTRA)) {
+            finish();
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        stopAlertSound();
-        stopVibrator();
-        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+        stopAlertSoundAndVibration();
     }
 
     /**
@@ -114,17 +138,17 @@ public class AlarmActivity extends Activity {
         public void run() {
             playAlertSound();
             startVibrator();
-            if(mAlarmSoundAndVibrateRepeatCount++ < ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT) {
+            if(++mAlarmSoundAndVibrateRepeatCount < ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT) {
                 mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 5000);
             }
         }
     };
-	
-	private class SetAlarmTask extends AsyncTask<Void, Void, Void> {
+
+    private class SetAlarmTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
 			// set/schedule next alarm
-			setAlarm(AlarmActivity.this);
+			setNextAlarm(AlarmActivity.this);
 			return null;
 		}
 	}
@@ -140,24 +164,31 @@ public class AlarmActivity extends Activity {
 	
 	@Override
 	protected void onUserLeaveHint() {
-		Log.i(TAG, "User left"); // user hit Home, same as OK
+		Log.i(TAG, "User left"); // user hit Home, treat it the same as I'm OK
 		super.onUserLeaveHint();
+        AreYouOKApp.cancelCountdownTimer();
 		finish();
 	}
 	
-	private void sendSMS() {
+	private void sendEmergencySMS() {
 		SMSSender.sendEmergencySMS(this);
 	}
 	
 	private void playAlertSound() {
 		AlarmSounds.play(R.raw.alarm);
 	}
+
+    private void stopAlertSoundAndVibration() {
+        stopVibrator();
+        stopAlertSound();
+        mAlarmSoundAndVibrateRepeatCount = 0;
+        if(mHandler != null) {
+            mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+        }
+    }
 	
 	private void stopAlertSound() {
-        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
-        mAlarmSoundAndVibrateRepeatCount = 0;
 		AlarmSounds.stop();
-        stopVibrator();
 	}
 	
 	private void startVibrator() {
@@ -182,7 +213,7 @@ public class AlarmActivity extends Activity {
 	 * e.g. alarm on at 6am, off at 10pm, running every 4 hours (10am, 2pm, 6pm, not inc 10pm)
 	 * @param context
 	 */
-	public static void setAlarm(Context context) {
+	public static void setNextAlarm(Context context) {
 		final Context app = context.getApplicationContext();
 		final AlarmManager am = (AlarmManager)app.getSystemService(ALARM_SERVICE);
 		final Intent alarmIntent = new Intent(app, AlarmReceiver.class);
@@ -251,8 +282,8 @@ public class AlarmActivity extends Activity {
         
         if(nextAlarm != null) {
         	Log.i(TAG, "Next Alarm " + nextAlarm.toString());
-//this next line can be used to test the alarm more frequently for dev purposes (1min)
-//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 1000*60, pendingIntent);
+//this next line can be used to test the alarm more frequently for dev purposes (3min)
+//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 3000*60, pendingIntent);
         	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
         	Prefs.setAlarmEnabled(true);
             Prefs.setNextAlarmTime(nextAlarm.getMillis());
@@ -273,4 +304,12 @@ public class AlarmActivity extends Activity {
         
         Prefs.setAlarmEnabled(false);
 	}
+
+    public static void dismiss(Context context) {
+        Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        alarmIntent.putExtra(CANCEL_ALERT_EXTRA, true);
+        context.startActivity(alarmIntent);
+    }
 }

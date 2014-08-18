@@ -8,8 +8,10 @@ import com.areyouok.prefs.Prefs;
 
 public class AreYouOKApp extends Application {
 	public static AreYouOKApp app;
-	static Handler mHandler = new Handler();
-	static boolean countdownInProgress;
+    public static final int MAX_EMERGENCY_SMS_TO_SEND = 5;
+
+	private static Handler handler = new Handler();
+	private static boolean countdownInProgress;
 	
 	@Override
 	public void onCreate() {
@@ -17,27 +19,47 @@ public class AreYouOKApp extends Application {
 		app = this;
 		Prefs.init(this);
 		AlarmSounds.init(this);
+
+        // set up alarm if it isn't already running
+        AlarmActivity.setNextAlarm(this);
 	}
-	
-	final private static Runnable mCountDownRunnable = new Runnable() {
+
+    final private static Runnable mCountDownRunnable = new Runnable() {
 		public void run() {
-            // limit help messages to 5 total
-			if(Prefs.getSentSMSCount()<5) {
-				SMSSender.sendEmergencySMS(app);
-				cancelCountdownTimer();
-			}
+            // limit help messages to total
+			if(Prefs.getSentSMSCount() < MAX_EMERGENCY_SMS_TO_SEND) {
+
+                // dismiss AlarmActivity
+                AlarmActivity.dismiss(app);
+
+                // send a/another emergency SMS
+                SMSSender.sendEmergencySMS(app);
+
+                // continue sending messages every "respond time"
+                handler.postDelayed(mCountDownRunnable, Prefs.getRespondTime());
+			} else {
+                cancelCountdownTimer();
+            }
 		}
 	};
-	
+
+    /**
+     * Start the countdown to sending friends/family a help message
+     * Defaults to 20 mins
+     */
 	public static void startCountdownTimer() {
 		if(!countdownInProgress) {
-			mHandler.postDelayed(mCountDownRunnable, Prefs.getRespondTime());
+			handler.postDelayed(mCountDownRunnable, Prefs.getRespondTime());
 			countdownInProgress = true;
 		}
 	}
-	
+
+    /**
+     * Cancel the countdown to sending friends/family a help message
+     */
 	public static void cancelCountdownTimer() {
-		mHandler.removeCallbacks(mCountDownRunnable);
+        Prefs.setSentSMSCount(0);
+		handler.removeCallbacks(mCountDownRunnable);
 		countdownInProgress = false;
 	}
 }
