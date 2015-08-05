@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -154,7 +155,7 @@ public class AlarmActivity extends Activity {
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
 		if(keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.i(TAG, "Back pressed"); // doesn't fire due to not being a Launcher replacement
 			return true;
@@ -211,7 +212,7 @@ public class AlarmActivity extends Activity {
 	/**
 	 * To help understand how the alarm is set, keep in mind some example on and off times...
 	 * e.g. alarm on at 6am, off at 10pm, running every 4 hours (10am, 2pm, 6pm, not inc 10pm)
-	 * @param context
+	 * @param context Context
 	 */
 	public static void setNextAlarm(Context context) {
 		final Context app = context.getApplicationContext();
@@ -223,7 +224,7 @@ public class AlarmActivity extends Activity {
         am.cancel(pendingIntent);
         
         // check alarm is on
-        if(Prefs.getAlarmEnabled() == false) {
+        if(!Prefs.getAlarmEnabled()) {
         	Log.i(TAG, "Alarm disabled");
         	return;
         }
@@ -288,7 +289,8 @@ public class AlarmActivity extends Activity {
         	Prefs.setAlarmEnabled(true);
             Prefs.setNextAlarmTime(nextAlarm.getMillis());
         } else {
-        	Toast.makeText(app, "Unable to set alarm, unknown problem occurred", Toast.LENGTH_LONG);
+        	Toast.makeText(app, "Unable to set alarm, unknown problem occurred", Toast.LENGTH_LONG)
+					.show();
         	Log.e(TAG, "Couldn't find nextAlarm time");
         }
 	}

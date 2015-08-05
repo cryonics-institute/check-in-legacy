@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.areyouok.data.Contact;
 import com.areyouok.prefs.Prefs;
@@ -58,7 +57,9 @@ public class SMSSender {
         }
         final Intent sentIntent = new Intent(SMS_SENT_ACTION);
         sentIntent.putExtra("names", Arrays.toString(names).replace("[", "").replace("]", ""));
-        if(isCallForHelp) sentIntent.putExtra("isCallForHelp", isCallForHelp);
+        if(isCallForHelp) {
+			sentIntent.putExtra("isCallForHelp", true);
+		}
 		PendingIntent sentPendingIntent =
                 PendingIntent.getBroadcast(context, 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -1,6 +1,5 @@
 package com.areyouok;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,13 +35,13 @@ public class SettingsActivity extends ActionBarActivity {
 			}
 		});
 		
-		((Button)findViewById(R.id.change_friends_family_button)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.change_friends_family_button).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(SettingsActivity.this, ChooseContactsActivity.class);
 				startActivity(intent);
 			}
 		});
-		((Button)findViewById(R.id.back_button)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.back_button).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
@@ -69,16 +68,16 @@ public class SettingsActivity extends ActionBarActivity {
 			    }).show();
 			}
 		});
-		((Button)findViewById(R.id.about_button)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.about_button).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				new AlertDialog.Builder(SettingsActivity.this)
-				.setTitle("About")
-				.setMessage("AreYouOK was developed by Richard Leggett, Valis Interactive Ltd.")
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-					}
-				}).setNegativeButton("Visit site", new DialogInterface.OnClickListener() {
+						.setTitle("About")
+						.setMessage("AreYouOK was developed by Richard Leggett, Valis Interactive Ltd.")
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								dialog.dismiss();
+							}
+						}).setNegativeButton("Visit site", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("http://www.valisinteractive.com"));
 						startActivity(viewIntent);

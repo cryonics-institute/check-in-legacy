@@ -170,10 +170,11 @@ public class AlarmSettingsActivity extends ActionBarActivity {
 			if(convertView != null) {
 				view = (TextView)convertView;
 			} else {
-				view = (TextView)LayoutInflater.from(mContext).inflate(R.layout.sleep_spinner_list_row, null);
+				view = (TextView)LayoutInflater.from(mContext)
+						.inflate(R.layout.sleep_spinner_list_row, parent, false);
 			}
 			int time = (Integer)getItem(position);
-			String amPM = "";
+			String amPM;
 			if(mTimePeriod==MORNING) {
 				if(time==12) amPM = " midday";
 				else amPM = " am";

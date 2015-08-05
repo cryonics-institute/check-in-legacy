@@ -1,6 +1,5 @@
 package com.areyouok;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -45,7 +44,7 @@ public class WizardActivity extends ActionBarActivity {
     	if(state == WELCOME_STATE) {
     		setContentView(R.layout.wizard_activity_1);
     		
-    		((Button)findViewById(R.id.startButton)).setOnClickListener(new OnClickListener() {
+    		findViewById(R.id.startButton).setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					state = CHOOSE_CONTACTS_STATE;
 					populateUI();
@@ -56,12 +55,12 @@ public class WizardActivity extends ActionBarActivity {
     	} else if(state == CHOOSE_CONTACTS_STATE) {
     		setContentView(R.layout.wizard_activity_2);
 
-    		((Button)findViewById(R.id.startButton)).setOnClickListener(new OnClickListener() {
-    			public void onClick(View v) {
-    				Intent intent = new Intent(WizardActivity.this, ChooseContactsActivity.class);
-    				startActivityForResult(intent, CHOOSE_CONTACTS_REQUEST);
-    			}
-    		});
+    		findViewById(R.id.startButton).setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Intent intent = new Intent(WizardActivity.this, ChooseContactsActivity.class);
+					startActivityForResult(intent, CHOOSE_CONTACTS_REQUEST);
+				}
+			});
             setTitle(mTitle);
 
     	} else if(state == SET_ALARM_STATE) {
@@ -83,11 +82,11 @@ public class WizardActivity extends ActionBarActivity {
 	    	int offTime = Prefs.getAlarmOffAt();
 	    	
 	    	// format for easy reading
-	    	String onAMPM = "";
+	    	String onAMPM;
 			if(onTime==12) onAMPM = " midday";
 			else onAMPM = " am";
 				
-			String offAMPM = "";
+			String offAMPM;
 			if(offTime==0) {
 				offTime = 12;
 				offAMPM = " midnight";
