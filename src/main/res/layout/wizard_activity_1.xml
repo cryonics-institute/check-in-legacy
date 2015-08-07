@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:padding="@dimen/activity_padding"
-    >
-	
-	<ScrollView 
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent">
+
+	<ImageView
 		android:layout_width="match_parent"
-		android:layout_height="0px"
-		android:layout_weight="1"
-		android:layout_marginBottom="10dip">
-		
-		<TextView  
-			android:layout_width="match_parent" 
-			android:layout_height="wrap_content" 
-			android:text="@string/welcome_1"
-			android:textColor="@color/text_color"
-            android:textSize="@dimen/text_body"/>
-	</ScrollView>
-	
-	<Button 
-		android:id="@+id/startButton" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:text="Let's get started" 
-	>
-	</Button>
-</LinearLayout>
+		android:layout_height="match_parent"
+		android:src="@drawable/background"
+		android:scaleType="centerCrop"
+		tools:ignore="ContentDescription" />
+
+	<include layout="@layout/dropshadow" />
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_horizontal"
+		>
+
+		<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="0px"
+			android:layout_weight="1"
+			android:layout_marginBottom="10dp"
+			android:fadingEdge="vertical"
+			android:requiresFadingEdge="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/activity_padding"
+				android:clipToPadding="false"
+				android:text="@string/wizard_1"
+				android:textSize="@dimen/text_body"
+				android:autoLink="all"
+				android:textColorLink="@color/text_color"/>
+		</ScrollView>
+
+		<Button
+			android:id="@+id/startButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Let's get started"
+			android:layout_marginBottom="@dimen/activity_padding"
+			>
+		</Button>
+	</LinearLayout>
+
+</FrameLayout>

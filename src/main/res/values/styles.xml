@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CryonicsAppTheme" parent="@style/Theme.AppCompat">
+        <item name="actionBarTheme">@style/ActionBarTheme</item>
+        <item name="android:textColorPrimary">#ffffffff</item>
+        <item name="android:textColorTertiary">#ffffffff</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+        <item name="android:spinnerStyle">@style/SpinnerStyle</item>
+    </style>
+
+    <style name="ActionBarTheme" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/actionBarBackground</item>
+        <item name="android:icon">@drawable/header_logo</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="SpinnerStyle" parent="android:Widget.Spinner">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:background">@drawable/apptheme_spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/apptheme_list_selector_holo_light</item>
+    </style>
+
+    <style name="SpinnerDropDownItemStyle" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:checkMark">@drawable/apptheme_btn_radio_holo_light</item>
+    </style>
+
+</resources>

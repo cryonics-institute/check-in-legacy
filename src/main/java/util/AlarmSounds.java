@@ -7,7 +7,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 
-import com.areyouok.R;
+import com.cryonicsinstitute.R;
 
 public class AlarmSounds {
 	private static SoundPool mSoundPool;

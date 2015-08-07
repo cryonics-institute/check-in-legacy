@@ -1,10 +1,3 @@
-Overview:
-
-This app allows friends and family to know their loved-one is OK throughout the day and night. 
-It does this by alerting and then prompting the loved-one to press a button in response to the question, "Are you OK?".
-If they click NO, or are unable to press the button in a reasonable amount of time, the app sends a message to the friend and family members, 
-giving them an opportunity to call their loved one or physically check in on them.
-
 In detail: 
 
 When the app is installed, it asks the user to select 1 or more friends and family from their contacts list, 
@@ -38,16 +31,6 @@ SetupAlarmActivity: 2 screens, During the day from: "9am" to "6pm", set alarm of
 SetupCompleteActivity: "Thank you message", "Done button"
 
 AlarmActivity: "Are you OK", "YES", "NO".
-
-Extensions:
-
-Allow friends and family to download app via SMS link and cancel alarm?
-
-
-Localisation:
-
-Iconography such as the smiley face next to the word YES is used to both help with localisation, and also to provide an easily 
-identifiable visual cue to someone with poor eye-sight or reading and comprehension problems. 
 
 Accessibility:
 

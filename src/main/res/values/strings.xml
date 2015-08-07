@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AreYouOK</string>
+    <string name="app_name">Cryonics Institute</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     
-    <string name="welcome_1">AreYouOK is a simple personal alarm system that checks if you are OK every so often throughout the day.\n\nIf you don\'t respond it alerts your chosen friends and family by text message so that they can call or check in to make sure all is well.\n\n</string>
-    <string name="welcome_2">(*Text messages charged at your standard rate, please check with your provider).</string>
-    
+    <string name="wizard_1">The Cryonics Institute\'s Check-In app is a simple personal alarm system that checks if you\'re all right at scheduled intervals throughout the day.\n\nIf you don\'t respond, it alerts your selected friends, family and emergency resources by text message so they can call or check in to make sure all is well.\n\nIt is ideal for standby notifications, as well as for anyone who wants the peace of mind of knowing a loved one is all right.\n\nTo learn more about cryonics and the Cryonics Institute, please visit <a href="http://www.cryonics.org">www.cryonics.org</a>.</string>
+    <string name="wizard_1_smallprint">(*Messages charged at your standard rate, please check with your cell provider).</string>
+    <string name="wizard_2">Next we\'ll pick one or more friends, family or emergency contacts from your phonebook, or you can add numbers directly.\n\nThese are the people that will receive a text message alert if you don\'t check-in because something might be wrong.</string>
+    <string name="wizard_3">Next we\'ll set up the check-in alarm. This buzzes and asks you if you\'re OK every day at set times.\n\nPress \'Continue\' when you\'re ready.</string>
+    <string name="wizard_complete" formatted="false">Great we\'re all set. The alarm is set to check in with you every %s %s after %s until %s, but not at those times.\n\nRemember you can change these settings, or disable the alarm at any time by opening the CI Check-In app.</string>
+    <string name="alarm_settings_message">What time, if any, would you like the alarm to not go off during the day? (For example, when you\'re asleep.)</string>
+
+    <string name="hour">hour</string>
+    <string name="hours">hours</string>
+
     <string name="introAlarmOn">Alarm is set, next check-in at %1$s.</string>
     <string name="introAlarmOff">Check-in alarm is NOT set, please click \'Make Changes\' to set it.</string>
     <string name="change_alarm">Change Alarm</string>
     <string name="set_alarm">Set Alarm</string>
 
-
-
-    <string name="help_message">I may be in need of help, please call or visit to check (sent by AreYouOK app http://areyouokapp.net)</string>
-    <string name="im_ok_message">I am OK, please disregard any previous message(s) (sent by AreYouOK app http://areyouokapp.net)</string>
-
-    <string name="wizard_complete" formatted="false">Great we\'re all set. The alarm is set to check in with you every %s %s after %s until %s, but not at those times.\n\nRemember you can change these settings, or disable the alarm at any time by opening the AreYouOK app.</string>
-    <string name="hour">hour</string>
-    <string name="hours">hours</string>
+    <string name="help_message">I may be in need of help, please call or visit to check (sent by CI Check-In App http://www.cryonics.org)</string>
+    <string name="im_ok_message">I am OK, please disregard any previous message(s) (sent by CI Check-In App http://www.cryonics.org)</string>
+    <string name="sending_">Sending…</string>
+    <string name="send_for_help_dialog_message">Let your designated friends, family and emergency contacts know you need help?</string>
+    <string name="you_havent_chosen_friends_family_message">You haven\'t chosen any friends or family, pick one now…</string>
+    <string name="let_designated_know_youre_ok_message">Let your designated friends, family and emergency contacts know you\'re all right?</string>
 </resources>

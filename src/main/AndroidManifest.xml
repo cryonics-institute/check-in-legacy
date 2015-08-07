@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.areyouok"
-      android:versionCode="1"
-      android:versionName="1.0">
-      
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="18" />
+    package="com.cryonicsinstitute"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-    <supports-screens android:largestWidthLimitDp="480" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="22" />
+
+    <!--<supports-screens android:largestWidthLimitDp="320" />-->
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -19,50 +19,56 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
 
-    <application android:icon="@drawable/ic_launcher"
-    android:name=".AreYouOKApp" 
-    android:label="@string/app_name" 
-    android:theme="@style/AppTheme"
-    >
-      <activity android:name=".MenuActivity"
-                android:label="@string/app_name"
-                android:screenOrientation="portrait">
-        <intent-filter>
-          <action android:name="android.intent.action.MAIN" />
-          <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity>
-      <activity android:name=".WizardActivity"
-                android:label="Welcome"
-                android:screenOrientation="portrait">
-      </activity>
-      <activity android:name=".SettingsActivity"
-                android:label="Settings"
-                android:screenOrientation="portrait">
-      </activity>
-      <activity android:name=".ChooseContactsActivity"
-                android:label="My Contacts"
-                android:screenOrientation="portrait">
-      </activity>
-      <activity android:name=".AlarmSettingsActivity"
-                android:label="Alarm Settings"
-                android:screenOrientation="portrait">
-      </activity>
-      <activity android:name=".AlarmActivity"
-                android:label="Alarm"
-                android:screenOrientation="portrait">
-      </activity>
+    <application android:icon="@mipmap/ic_launcher"
+        android:name=".CryonicsCheckinApp"
+        android:label="@string/app_name"
+        android:theme="@style/CryonicsAppTheme"
+        android:allowBackup="true">
+        <activity android:name="com.cryonicsinstitute.MenuActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-			<receiver android:name=".OnBootReceiver">
-				<intent-filter>
-					<action android:name="android.intent.action.BOOT_COMPLETED" />
-				</intent-filter>
-			</receiver>
-    
-      <receiver android:name=".AlarmReceiver" >
-      </receiver>
+        <activity android:name="com.cryonicsinstitute.WizardActivity"
+            android:label="WELCOME"
+            android:screenOrientation="portrait">
+        </activity>
 
-      <meta-data android:name="com.crashlytics.ApiKey" android:value="c9efd15072329a40deab8549044bdbfb9b568aa3"/>
+        <activity android:name="com.cryonicsinstitute.SettingsActivity"
+            android:label="SETTINGS"
+            android:screenOrientation="portrait">
+        </activity>
 
+        <activity android:name="com.cryonicsinstitute.ChooseContactsActivity"
+            android:label="CONTACTS"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name="com.cryonicsinstitute.AlarmSettingsActivity"
+            android:label="ALARM SETTINGS"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name="com.cryonicsinstitute.AlarmActivity"
+            android:label="ALARM"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <receiver android:name="com.cryonicsinstitute.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.cryonicsinstitute.AlarmReceiver" >
+        </receiver>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c9efd15072329a40deab8549044bdbfb9b568aa3" />
     </application>
 </manifest>
