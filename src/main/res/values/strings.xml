@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cryonics Institute</string>
+    <string name="are_you_ok_message">Cryonics Institute - Are you OK? Just checking.</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -26,4 +27,5 @@
     <string name="send_for_help_dialog_message">Let your designated friends, family and emergency contacts know you need help?</string>
     <string name="you_havent_chosen_friends_family_message">You haven\'t chosen any friends or family, pick one now…</string>
     <string name="let_designated_know_youre_ok_message">Let your designated friends, family and emergency contacts know you\'re all right?</string>
+
 </resources>
