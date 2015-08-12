@@ -105,7 +105,7 @@ public class ChooseContactsActivity extends BaseActivity {
 
         final EditText input = new EditText(this);
 		input.setInputType(InputType.TYPE_CLASS_PHONE);
-		input.setHint("e.g. 07123456789");
+		input.setHint("e.g. 555-555-5555");
         input.setLayoutParams(params);
         input.requestFocus();
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
