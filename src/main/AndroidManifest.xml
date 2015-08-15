@@ -64,6 +64,9 @@
         <receiver android:name="com.cryonicsinstitute.AlarmReceiver" >
         </receiver>
 
+        <receiver android:name="com.cryonicsinstitute.SMSAlertReceiver" >
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c9efd15072329a40deab8549044bdbfb9b568aa3" />

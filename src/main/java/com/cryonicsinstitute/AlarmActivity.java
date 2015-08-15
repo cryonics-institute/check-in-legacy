@@ -284,7 +284,7 @@ public class AlarmActivity extends Activity {
         if(nextAlarm != null) {
         	Log.i(TAG, "Next Alarm " + nextAlarm.toString());
 //this next line can be used to test the alarm more frequently for dev purposes (3min)
-//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 3000*60, pendingIntent);
+//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 2000*60, pendingIntent);
         	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
         	Prefs.setAlarmEnabled(true);
             Prefs.setNextAlarmTime(nextAlarm.getMillis());
