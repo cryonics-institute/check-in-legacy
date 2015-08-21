@@ -2,6 +2,7 @@ package com.cryonicsinstitute;
 
 import java.util.ArrayList;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -10,8 +11,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +34,8 @@ import org.joda.time.format.DateTimeFormatter;
  * Main menu
  */
 public class MenuActivity extends BaseActivity {
+
+    private static final int PERMISSIONS_REQUEST_CODE = 1;
 
     /**
      * Receiver which is configured to listen to pending SMS sending operation
@@ -140,10 +146,12 @@ public class MenuActivity extends BaseActivity {
                 finish();
             }
         });
+
+        ((TextView)findViewById(R.id.version_textview)).setText("Version: " + BuildConfig.VERSION_NAME);
 	}
 	
 	@Override
-	protected void onResume() {
+    protected void onResume() {
 		super.onResume();
 		
 		boolean isAlarmOn = Prefs.getAlarmEnabled();
@@ -166,6 +174,12 @@ public class MenuActivity extends BaseActivity {
 			introText.setTextColor(0xffff0000);
             statusIcon.setImageResource(R.drawable.ic_warning);
 		}
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_CODE);
+        }
 	}
 
     @Override
@@ -178,7 +192,39 @@ public class MenuActivity extends BaseActivity {
         if(mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
+    }
 
+    private AlertDialog permissionsRejectedDialog;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED){
+                    // permission was granted, woohoo!
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    if(permissionsRejectedDialog == null) {
+                        AlertDialog.Builder builder =
+                                new AlertDialog.Builder(this);
+                        builder.setMessage("SMS permissions are required, please re-install or check your phone's Application Settings if you're still having trouble.");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                MenuActivity.this.finish();
+                            }
+                        });
+                        permissionsRejectedDialog = builder.create();
+                        permissionsRejectedDialog.show();
+                    }
+                }
+            }
+        }
     }
 
     private void showCallForHelpAlert() {
@@ -234,7 +280,7 @@ public class MenuActivity extends BaseActivity {
 		    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int whichButton) {
 		        	dialog.dismiss();
-                    CryonicsCheckinApp.cancelCountdownTimer();
+                    CryonicsCheckinApp.cancelCountdownToSMSTimer();
                     mProgressDialog = ProgressDialog.show(MenuActivity.this, null, "Sending...", true);
                     registerSMSSentReceiver();
 		        	SMSSender.sendImOKSMS(MenuActivity.this);

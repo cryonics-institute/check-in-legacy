@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -57,7 +58,7 @@ public class AlarmActivity extends Activity {
 		
 		findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				CryonicsCheckinApp.cancelCountdownTimer();
+				CryonicsCheckinApp.cancelCountdownToSMSTimer();
                 stopAlertSoundAndVibration();
 				finish();
 			}
@@ -65,14 +66,14 @@ public class AlarmActivity extends Activity {
 
 		findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				CryonicsCheckinApp.cancelCountdownTimer();
+				CryonicsCheckinApp.cancelCountdownToSMSTimer();
                 stopAlertSoundAndVibration();
 
 				new AlertDialog.Builder(AlarmActivity.this)
 				.setMessage("Do you need help?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-                        CryonicsCheckinApp.cancelCountdownTimer();
+                        CryonicsCheckinApp.cancelCountdownToSMSTimer();
 						sendEmergencySMS();
 
 						final Toast toast = Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG);
@@ -84,7 +85,7 @@ public class AlarmActivity extends Activity {
 					}
 				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-                        CryonicsCheckinApp.cancelCountdownTimer();
+                        CryonicsCheckinApp.cancelCountdownToSMSTimer();
 						dialog.dismiss();
 						finish();
 					}
@@ -110,8 +111,8 @@ public class AlarmActivity extends Activity {
 
 		// give user a countdown before sending out messages to friends
         // i.e. wait 20 mins for user to reach phone
-        CryonicsCheckinApp.cancelCountdownTimer();
-		CryonicsCheckinApp.startCountdownTimer();
+        CryonicsCheckinApp.cancelCountdownToSMSTimer();
+		CryonicsCheckinApp.startCountdownToSMSTimer();
 
         // Setup the next alarm
 		new SetAlarmTask().execute();
@@ -167,7 +168,7 @@ public class AlarmActivity extends Activity {
 	protected void onUserLeaveHint() {
 		Log.i(TAG, "User left"); // user hit Home, treat it the same as I'm OK
 		super.onUserLeaveHint();
-        CryonicsCheckinApp.cancelCountdownTimer();
+        CryonicsCheckinApp.cancelCountdownToSMSTimer();
 		finish();
 	}
 	
@@ -194,7 +195,7 @@ public class AlarmActivity extends Activity {
 	
 	private void startVibrator() {
 		try {
-			mVibrator.vibrate(new long[]{250l,1000l,250l,1000l,250l,1000l}, -1);
+			mVibrator.vibrate(new long[]{250l, 1000l, 250l, 1000l, 250l, 1000l}, -1);
 		} catch (Exception e) {
 			Log.w(TAG, "Vibrator failed.");
 		}
@@ -218,7 +219,7 @@ public class AlarmActivity extends Activity {
 		final Context app = context.getApplicationContext();
 		final AlarmManager am = (AlarmManager)app.getSystemService(ALARM_SERVICE);
 		final Intent alarmIntent = new Intent(app, AlarmReceiver.class);
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(app, 0, alarmIntent, 0);
+		final PendingIntent pendingIntent = PendingIntent.getBroadcast(app, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		// cancel existing alarm
         am.cancel(pendingIntent);
@@ -247,14 +248,14 @@ public class AlarmActivity extends Activity {
         	offAt = offAt.plusDays(1);
         }
         
-        DateTime nextAlarm = null;
+        final DateTime nextAlarm;
         
         int compareNowToOffTime = now.compareTo(offAt);
-        int compareNowToOnTime = now.compareTo(onAt);
         if(compareNowToOffTime == -1) {
         	// we're before "off alarm" time (e.g. 10 pm)
-        	
+
         	// check if we're before the "on time"
+        	int compareNowToOnTime = now.compareTo(onAt);
         	if(compareNowToOnTime == -1) {
         		// we're before the first alarm has gone off in the day, so just set it to that
         		nextAlarm = onAt.plusHours(alarmFrequencyHours);
@@ -276,30 +277,38 @@ public class AlarmActivity extends Activity {
         		}
         	}
         	
-        } else if(compareNowToOffTime == 1 || compareNowToOffTime == 0){
+        } else {
         	// we're at or after the off time (e.g. 10pm), set alarm for the morning
     		nextAlarm = onAt.plusDays(1).plusHours(alarmFrequencyHours);
         } 
-        
-        if(nextAlarm != null) {
-        	Log.i(TAG, "Next Alarm " + nextAlarm.toString());
+
+		long nextAlarmTime = nextAlarm.getMillis();
+
+		Log.i(TAG, "Next Alarm " + nextAlarm.toString());
 //this next line can be used to test the alarm more frequently for dev purposes (3min)
-//am.set(AlarmManager.RTC_WAKEUP, now.getMillis() + 2000*60, pendingIntent);
-        	am.set(AlarmManager.RTC_WAKEUP, nextAlarm.getMillis(), pendingIntent);
-        	Prefs.setAlarmEnabled(true);
-            Prefs.setNextAlarmTime(nextAlarm.getMillis());
-        } else {
-        	Toast.makeText(app, "Unable to set alarm, unknown problem occurred", Toast.LENGTH_LONG)
-					.show();
-        	Log.e(TAG, "Couldn't find nextAlarm time");
-        }
+//nextAlarmTime = now.getMillis() + 2000*60;
+
+		// cancel previous
+		am.cancel(pendingIntent);
+
+		// set new alarm
+		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
+			am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextAlarmTime, pendingIntent);
+		} else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
+			am.setExact(AlarmManager.RTC_WAKEUP, nextAlarmTime, pendingIntent);
+		} else {
+			am.set(AlarmManager.RTC_WAKEUP, nextAlarmTime, pendingIntent);
+		}
+
+		Prefs.setAlarmEnabled(true);
+		Prefs.setNextAlarmTime(nextAlarm.getMillis());
 	}
 	
 	public static void disableAlarm(Context context) {
 		AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
 
 		final Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+		final PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		// cancel alarm
         am.cancel(pendingIntent);

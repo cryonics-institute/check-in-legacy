@@ -81,6 +81,15 @@
                 android:maxWidth="300dp"
                 android:layout_marginBottom="8dp"
                 />
+            <TextView
+                android:id="@+id/version_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:paddingTop="4dp"
+                android:textSize="16sp"
+                android:textColor="#66ffffff"
+                tools:text="Version:"/>
 
             <View android:layout_width="match_parent"
                 android:layout_height="0px"

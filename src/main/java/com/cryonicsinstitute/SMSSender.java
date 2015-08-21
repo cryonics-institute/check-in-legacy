@@ -61,7 +61,7 @@ public class SMSSender {
 			sentIntent.putExtra("isCallForHelp", true);
 		}
 		PendingIntent sentPendingIntent =
-                PendingIntent.getBroadcast(context, 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getBroadcast(context, 0, sentIntent, 0);
 
 		final SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPendingIntent, null);
