@@ -23,6 +23,7 @@
 
     <!--<string name="help_message">I may be in need of help. Please contact me immediately or visit my location to check up on me. Sent by Cryonics Institute Check-In app. http://www.cryonics.org/app</string>-->
     <string name="help_message">I may be in need of help. Please contact me immediately or visit my location to check up on me. Read more: http://www.cryonics.org/app</string>
+    <string name="help_message_with_location">I may be in need of help. Please contact me immediately or visit my location to check up on me. %1$s</string>
     <string name="im_ok_message">I am OK, please disregard any previous message(s) (sent by CI Check-In App http://www.cryonics.org/app)</string>
     <string name="sending_">Sending…</string>
     <string name="send_for_help_dialog_message">Let your designated friends, family and emergency contacts know you need help?</string>

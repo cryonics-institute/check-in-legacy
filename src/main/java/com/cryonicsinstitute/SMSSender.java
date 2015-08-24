@@ -6,6 +6,7 @@ import java.util.Arrays;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.telephony.SmsManager;
 import android.util.Log;
 
@@ -15,14 +16,26 @@ import com.cryonicsinstitute.prefs.Prefs;
 public class SMSSender {
     public static String SMS_SENT_ACTION = "SMS_SENT";
 
-	public static void sendEmergencySMS(Context context) {
+    /**
+     * @param context Context
+     * @param location (optional) may be null
+     */
+	public static void sendEmergencySMS(Context context, Location location) {
 		Log.i("AYO", "Sending Emergency SMS!");
 		ArrayList<Contact> contacts = Prefs.getContacts();
 		
 		for (Contact contact : contacts) {
-			sendSMS(context, contact.number,
-                    context.getString(R.string.help_message),
-                    true);
+			if(location != null) {
+				sendSMS(context, contact.number,
+						context.getString(R.string.help_message_with_location,
+								"http://maps.google.com/maps?q="
+										+location.getLatitude()+","+location.getLongitude()),
+						true);
+			} else {
+				sendSMS(context, contact.number,
+						context.getString(R.string.help_message),
+						true);
+			}
 		}
 		
 		Prefs.init(context.getApplicationContext());

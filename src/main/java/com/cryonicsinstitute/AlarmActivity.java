@@ -3,7 +3,6 @@ package com.cryonicsinstitute;
 import org.joda.time.DateTime;
 
 import util.AlarmSounds;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -25,8 +24,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cryonicsinstitute.prefs.Prefs;
+import com.google.android.gms.common.ConnectionResult;
 
-public class AlarmActivity extends Activity {
+public class AlarmActivity extends BaseGoogleAPIActivity {
     private static final String TAG = "AlarmActivity";
     private static final String CANCEL_ALERT_EXTRA = "cancelAlert";
 
@@ -36,9 +36,11 @@ public class AlarmActivity extends Activity {
     private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT = 20;
     private int mAlarmSoundAndVibrateRepeatCount = 0;
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        CryonicsCheckinApp.cancelCountdownToSMSTimer();
+
 		super.onCreate(savedInstanceState);
 
         // check for cancellation (see AreYouOKApp.java)
@@ -47,51 +49,51 @@ public class AlarmActivity extends Activity {
             finish();
             return;
         }
-		
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
 	            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
 	            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
 	            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-		
+
 		setContentView(R.layout.alarm_activity);
-		
+
 		findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				CryonicsCheckinApp.cancelCountdownToSMSTimer();
+            public void onClick(View v) {
+                CryonicsCheckinApp.cancelCountdownToSMSTimer();
                 stopAlertSoundAndVibration();
-				finish();
-			}
-		});
+                finish();
+            }
+        });
 
 		findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				CryonicsCheckinApp.cancelCountdownToSMSTimer();
+            public void onClick(View v) {
+                CryonicsCheckinApp.cancelCountdownToSMSTimer();
                 stopAlertSoundAndVibration();
 
-				new AlertDialog.Builder(AlarmActivity.this)
-				.setMessage("Do you need help?")
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-                        CryonicsCheckinApp.cancelCountdownToSMSTimer();
-						sendEmergencySMS();
+                new AlertDialog.Builder(AlarmActivity.this)
+                        .setMessage("Do you need help?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                CryonicsCheckinApp.cancelCountdownToSMSTimer();
+                                sendEmergencySMS();
 
-						final Toast toast = Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER,0,0);
-                        toast.show();
+                                final Toast toast = Toast.makeText(AlarmActivity.this, "Message sent to friends and family", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
 
-						dialog.dismiss();
-						finish();
-					}
-				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
                         CryonicsCheckinApp.cancelCountdownToSMSTimer();
-						dialog.dismiss();
-						finish();
-					}
-				}).show();
-			}
-		});
+                        dialog.dismiss();
+                        finish();
+                    }
+                }).show();
+            }
+        });
 
         mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -108,14 +110,11 @@ public class AlarmActivity extends Activity {
             }
         });
 
-
-		// give user a countdown before sending out messages to friends
-        // i.e. wait 20 mins for user to reach phone
-        CryonicsCheckinApp.cancelCountdownToSMSTimer();
-		CryonicsCheckinApp.startCountdownToSMSTimer();
-
+        // TODO: here we may want to countdown to Emergency Mode instead, once SMS is sent
         // Setup the next alarm
-		new SetAlarmTask().execute();
+        new SetAlarmTask().execute();
+
+        // next wait for GoogleApiClient to connect or fail before scheduling emergency SMS...
 	}
 
     @Override
@@ -173,7 +172,7 @@ public class AlarmActivity extends Activity {
 	}
 	
 	private void sendEmergencySMS() {
-		SMSSender.sendEmergencySMS(this);
+		SMSSender.sendEmergencySMS(this, lastKnownLocation);
 	}
 	
 	private void playAlertSound() {
@@ -322,5 +321,17 @@ public class AlarmActivity extends Activity {
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         alarmIntent.putExtra(CANCEL_ALERT_EXTRA, true);
         context.startActivity(alarmIntent);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        super.onConnected(bundle);
+        CryonicsCheckinApp.startCountdownToSMSTimer(lastKnownLocation);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        super.onConnectionFailed(result);
+        CryonicsCheckinApp.startCountdownToSMSTimer(null);
     }
 }

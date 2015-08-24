@@ -3,6 +3,7 @@ package com.cryonicsinstitute;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 
 import com.cryonicsinstitute.prefs.Prefs;
@@ -22,7 +23,8 @@ public class SMSAlertReceiver extends BroadcastReceiver {
             AlarmActivity.dismiss(CryonicsCheckinApp.app);
 
             // send emergency SMS
-            SMSSender.sendEmergencySMS(CryonicsCheckinApp.app);
+            Location location = intent.getParcelableExtra("location");
+            SMSSender.sendEmergencySMS(CryonicsCheckinApp.app, location);
 
             // schedule next SMS
             // NOTE: removed, they only want one

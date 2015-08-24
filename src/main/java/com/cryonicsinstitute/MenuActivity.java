@@ -176,9 +176,16 @@ public class MenuActivity extends BaseActivity {
 		}
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_CODE);
+                    new String[]{Manifest.permission.SEND_SMS,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSIONS_REQUEST_CODE);
         }
 	}
 
@@ -250,7 +257,7 @@ public class MenuActivity extends BaseActivity {
 					dialog.dismiss();
                     mProgressDialog = ProgressDialog.show(MenuActivity.this, null, getString(R.string.sending_), true);
                     registerSMSSentReceiver();
-					SMSSender.sendEmergencySMS(MenuActivity.this);
+					SMSSender.sendEmergencySMS(MenuActivity.this, lastKnownLocation);
 				}
 			}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {

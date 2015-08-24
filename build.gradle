@@ -19,6 +19,8 @@ repositories {
 dependencies {
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.google.android.gms:play-services-base:7.5.0'
+    compile 'com.google.android.gms:play-services-location:7.5.0'
     compile fileTree(dir: 'libs', include: '*.jar')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
         transitive = true;

@@ -39,7 +39,7 @@ import com.cryonicsinstitute.util.Util;
 /**
  * Allow user to pick a contact from phonebook, or add a number manually
  */
-public class ChooseContactsActivity extends BaseActivity {
+public class ChooseContactsActivity extends BaseGoogleAPIActivity {
 
     static int PICK_CONTACT_REQUEST = 0;
 	
@@ -250,7 +250,7 @@ public class ChooseContactsActivity extends BaseActivity {
 		updateContactsList();
 		
 		if(mSendMessageAfterPickingID == Extras.SEND_FOR_HELP_MESSAGE) {
-			SMSSender.sendEmergencySMS(this);
+			SMSSender.sendEmergencySMS(this, lastKnownLocation);
 		} else if(mSendMessageAfterPickingID == Extras.SEND_IM_OK_MESSAGE) {
 			SMSSender.sendImOKSMS(this);
 		}
