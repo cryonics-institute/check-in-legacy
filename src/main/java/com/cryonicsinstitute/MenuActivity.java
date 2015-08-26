@@ -148,6 +148,40 @@ public class MenuActivity extends BaseActivity {
         });
 
         ((TextView)findViewById(R.id.version_textview)).setText("Version: " + BuildConfig.VERSION_NAME);
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+                // previously rejected permission
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(this);
+                builder.setMessage("SMS permission is required to function, click OK to accept the permissions request.");
+                builder.setCancelable(false);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        requestPermissions();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        MenuActivity.this.finish();
+                    }
+                });
+                builder.create().show();
+
+            } else {
+                requestPermissions();
+            }
+        }
 	}
 	
 	@Override
@@ -174,20 +208,15 @@ public class MenuActivity extends BaseActivity {
 			introText.setTextColor(0xffff0000);
             statusIcon.setImageResource(R.drawable.ic_warning);
 		}
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST_CODE);
-        }
 	}
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.SEND_SMS,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_CODE);
+    }
 
     @Override
     protected void onPause() {
@@ -217,7 +246,7 @@ public class MenuActivity extends BaseActivity {
                     if(permissionsRejectedDialog == null) {
                         AlertDialog.Builder builder =
                                 new AlertDialog.Builder(this);
-                        builder.setMessage("SMS permissions are required, please re-install or check your phone's Application Settings if you're still having trouble.");
+                        builder.setMessage("SMS permissions are required to function, please re-install or check your phone's Application Settings if you're still having trouble.");
                         builder.setCancelable(false);
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
