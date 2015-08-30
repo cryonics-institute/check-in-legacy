@@ -41,6 +41,7 @@ public class AlarmSounds {
 		final int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
 		mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, max, 0);
 		final float streamVolume = max;
+//		final float streamVolume = 0.05f;//max;
 
 		// longer sounds are not READY immediately
 		int result = 0;

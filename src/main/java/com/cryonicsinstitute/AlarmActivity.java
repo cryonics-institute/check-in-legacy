@@ -95,20 +95,9 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
             }
         });
 
-        mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-
-        mAlarmSoundAndVibrateRepeatCount = 0;
-
-        // post the command to start the alert sound, as onPause() is called on 2nd run which
-        // cancels the mAlarmSoundAndVibrateRunnable - this circumvents that
         mHandler = new Handler();
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
-                mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 1000);
-            }
-        });
+
+        mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         // TODO: here we may want to countdown to Emergency Mode instead, once SMS is sent
         // Setup the next alarm
@@ -123,6 +112,23 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
         if(intent.hasExtra(CANCEL_ALERT_EXTRA)) {
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAlarmSoundAndVibrateRepeatCount = 0;
+
+        // post the command to start the alert sound, as onPause() is called on 2nd run which
+        // cancels the mAlarmSoundAndVibrateRunnable - this circumvents that
+        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 1000);
+            }
+        });
     }
 
     @Override
@@ -285,7 +291,7 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
 
 		Log.i(TAG, "Next Alarm " + nextAlarm.toString());
 //this next line can be used to test the alarm more frequently for dev purposes (3min)
-//nextAlarmTime = now.getMillis() + 2000*60;
+//nextAlarmTime = now.getMillis() + 1000*60;
 
 		// cancel previous
 		am.cancel(pendingIntent);
