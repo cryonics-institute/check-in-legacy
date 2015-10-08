@@ -1,4 +1,6 @@
-In detail: 
+Certificate password: keepmealive
+
+In detail:
 
 When the app is installed, it asks the user to select 1 or more friends and family from their contacts list, 
 and also the frequency of the prompts during the day and at again for at night. Options vary from not at all, to every 12 hours.

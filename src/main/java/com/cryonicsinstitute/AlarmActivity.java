@@ -36,7 +36,6 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
     private static final int ALARM_SOUND_AND_VIBRATE_REPEAT_LIMIT = 20;
     private int mAlarmSoundAndVibrateRepeatCount = 0;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         CryonicsCheckinApp.cancelCountdownToSMSTimer();
@@ -53,6 +52,7 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
 	            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
 	            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+	            WindowManager.LayoutParams.FLAG_FULLSCREEN |
 	            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
 
@@ -118,17 +118,19 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
     protected void onResume() {
         super.onResume();
 
-        mAlarmSoundAndVibrateRepeatCount = 0;
+        if(!isFinishing()) {
+            mAlarmSoundAndVibrateRepeatCount = 0;
 
-        // post the command to start the alert sound, as onPause() is called on 2nd run which
-        // cancels the mAlarmSoundAndVibrateRunnable - this circumvents that
-        mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 1000);
-            }
-        });
+            // post the command to start the alert sound, as onPause() is called on 2nd run which
+            // cancels the mAlarmSoundAndVibrateRunnable - this circumvents that
+            mHandler.removeCallbacks(mAlarmSoundAndVibrateRunnable);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mHandler.postDelayed(mAlarmSoundAndVibrateRunnable, 1000);
+                }
+            });
+        }
     }
 
     @Override
@@ -171,10 +173,11 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
 	
 	@Override
 	protected void onUserLeaveHint() {
-		Log.i(TAG, "User left"); // user hit Home, treat it the same as I'm OK
+		Log.i(TAG, "User left"); // user hit Home
 		super.onUserLeaveHint();
-        CryonicsCheckinApp.cancelCountdownToSMSTimer();
-		finish();
+        // the S4 was calling onUserLeaveHint moments after this Activity started because it was
+        // then showing the lock screen, previously we were finish()ing this Activity, no longer
+        CryonicsCheckinApp.cancelCountdownToSMSTimer(); // onStart will restart the countdown
 	}
 	
 	private void sendEmergencySMS() {
@@ -332,12 +335,14 @@ public class AlarmActivity extends BaseGoogleAPIActivity {
     @Override
     public void onConnected(Bundle bundle) {
         super.onConnected(bundle);
+        CryonicsCheckinApp.cancelCountdownToSMSTimer();
         CryonicsCheckinApp.startCountdownToSMSTimer(lastKnownLocation);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         super.onConnectionFailed(result);
+        CryonicsCheckinApp.cancelCountdownToSMSTimer();
         CryonicsCheckinApp.startCountdownToSMSTimer(null);
     }
 }

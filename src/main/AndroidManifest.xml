@@ -62,7 +62,9 @@
         <activity android:name="com.cryonicsinstitute.AlarmActivity"
             android:label="ALARM"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            >
         </activity>
 
         <receiver android:name="com.cryonicsinstitute.OnBootReceiver">

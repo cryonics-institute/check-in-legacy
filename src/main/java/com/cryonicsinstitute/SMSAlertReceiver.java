@@ -27,7 +27,7 @@ public class SMSAlertReceiver extends BroadcastReceiver {
             SMSSender.sendEmergencySMS(CryonicsCheckinApp.app, location);
 
             // schedule next SMS
-            // NOTE: removed, they only want one
+            // NOTE: removed, they only want one SMS to be sent no matter how long we wait
             Prefs.setSentSMSCount(0);
 //            CryonicsCheckinApp.startCountdownToSMSTimer();
         } else {
