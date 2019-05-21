@@ -11,19 +11,14 @@ import com.cryonicsinstitute.R;
 
 public class AlarmSounds {
 	private static SoundPool mSoundPool;
-	private static HashMap<Integer, Integer> mSoundPoolMap;
 	private static Context mContext;
 	private static AudioManager mAudioManager;
 	private static int mLastStreamID;
 	
 	public static void init(Context context) {
 		mContext = context;
-		mSoundPool = new SoundPool(3, AudioManager.STREAM_ALARM, 0);
-		mSoundPoolMap = new HashMap<Integer, Integer>();
+
 		mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-		
-		// preload and cache frequently used
-		mSoundPoolMap.put(R.raw.alarm, mSoundPool.load(mContext, R.raw.alarm, 1));
 	}
 	
 	/**
@@ -33,13 +28,15 @@ public class AlarmSounds {
 	 */
 	public static void play(int id) {
 		final int resID = id;
-		
-		if(!mSoundPoolMap.containsKey(id)) {
-			mSoundPoolMap.put(resID, mSoundPool.load(mContext, resID, 1));
+
+		if (mSoundPool != null) {
+			mSoundPool.release();
 		}
-		
+		mSoundPool = new SoundPool(3, AudioManager.STREAM_ALARM, 0);
+
+		int sound = mSoundPool.load(mContext, resID, 1);
+
 		final int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, max, 0);
 		final float streamVolume = max;
 //		final float streamVolume = 0.05f;//max;
 
@@ -47,7 +44,9 @@ public class AlarmSounds {
 		int result = 0;
 		int abortCount = 200;	
 		do {
-			result = mSoundPool.play(mSoundPoolMap.get(resID), streamVolume, streamVolume, 1, 0, 1f);
+			mSoundPool.stop(mLastStreamID);
+			result = mSoundPool.play(sound, streamVolume, streamVolume, 1, 0, 1f);
+			mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, max, 0);
 			if(result == 0) {
 				try {
 					Thread.sleep(2);
